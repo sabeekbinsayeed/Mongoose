@@ -4,7 +4,8 @@ import { UserServices } from './user.service'
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { users } = req.body
+    // const { users } = req.body
+    const [users] = req.body
 
     const zodParsedData = userValidationSchema.parse(users)
 
@@ -14,13 +15,12 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created succesfully',
       data: result,
     })
-  } catch (err: unknown) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err.message || 'something went wrong',
       error: err,
     })
-    console.log(err)
   }
 }
 
@@ -33,7 +33,8 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users fetched succesfully',
       data: result,
     })
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-an
+  } catch (err: any) {
     console.log(err)
     res.status(500).json({
       success: false,
@@ -54,7 +55,7 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User is retrieved succesfully',
       data: result,
     })
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: 'something went wrong',
@@ -77,7 +78,7 @@ const deleteUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
+      message: err.message || 'something went wrong deleting',
       error: err,
     })
   }
