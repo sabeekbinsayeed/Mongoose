@@ -5,7 +5,7 @@ import { UserServices } from './user.service'
 const createUser = async (req: Request, res: Response) => {
   try {
     // const { users } = req.body
-    const [users] = req.body
+    const users = req.body
 
     const zodParsedData = userValidationSchema.parse(users)
 
@@ -108,10 +108,103 @@ const updateUser = async (req: Request, res: Response) => {
   }
 }
 
+// const updateUserOrder = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params
+
+//     const { order } = req.body
+//     const UserData = await UserServices.getSingleUserFromDB(userId)
+//     // const result = await UserServices.getSingleUserFromDB(userId)
+//     const result = await UserServices.updateUserOrderFromDB(
+//       UserData,
+//       userId,
+//       order,
+//     )
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'User is updated succesfully',
+//       data: result,
+//     })
+//   } catch (err: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message || 'something went wrong while updating data',
+//       error: err,
+//     })
+//   }
+// }
+
+const updateUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const { productName, price, quantity } = req.body
+
+    const orderData = {
+      productName,
+      price,
+      quantity,
+    }
+
+    const result = await UserServices.updateUserOrderFromDB(userId, orderData)
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong while updating data',
+      error: err,
+    })
+  }
+}
+
+const getUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const result = await UserServices.getUserOrderFromDB(userId)
+    res.status(200).json({
+      success: true,
+      message: 'Order get successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong while updating orders data',
+      error: err,
+    })
+  }
+}
+const getUserOrdersTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const result = await UserServices.getUserOrderTotalPriceFromDB(userId)
+    res.status(200).json({
+      success: true,
+      message: 'total price get successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong while total pricedata',
+      error: err,
+    })
+  }
+}
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUser,
   deleteUser,
   updateUser,
+  updateUserOrders,
+  getUserOrders,
+  getUserOrdersTotalPrice,
+  // updateUserOrder,
 }
