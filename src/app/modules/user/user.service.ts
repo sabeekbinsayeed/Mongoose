@@ -27,6 +27,12 @@ const getSingleUserFromDB = async (userId: string) => {
 }
 
 const deleteUserFromDB = async (userId: string) => {
+  if (await User.isUserExists(userId.toString())) {
+    // throw new Error('User already exists!')
+  } else {
+    throw new Error('User not found!')
+  }
+
   const result = await User.updateOne({ userId }, { isDeleted: true })
   return result
 }
