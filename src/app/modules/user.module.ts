@@ -71,9 +71,9 @@ userSchema.pre('save', async function (next) {
 // post save middleware / hook
 userSchema.post('save', function (doc, next) {
   // Set the password field to undefined
-  if (doc.password) {
-    doc.password = undefined
-  }
+
+  doc.password = ''
+
   next()
 })
 

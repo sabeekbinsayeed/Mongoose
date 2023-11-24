@@ -42,6 +42,7 @@ const updateUserFromDB = async (userData: TUser, userId: string) => {
   if (await User.isUserExists(userId.toString())) {
     // throw new Error('User already exists!')
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-an
     throw new Error('User not found!')
   }
 
@@ -88,7 +89,7 @@ const updateUserOrderFromDB = async (userId: string, orderData: TOrder) => {
     const result = await existingUser.save()
     return result
   } catch (err) {
-    throw new Error(err.message || 'Error updating user order')
+    throw new Error('The orders does not exist')
   }
 }
 
@@ -105,19 +106,22 @@ const getUserOrderFromDB = async (userId: string) => {
     if (!existingUser) {
       throw new Error('User not found')
     }
+
+    if (!existingUser.orders || existingUser.orders.length === 0) {
+      throw new Error('User has no orders')
+    }
+
     const order_result = { orders: existingUser.orders }
 
     return order_result
   } catch (err) {
-    throw new Error(err.message || 'Error getting user order')
+    throw new Error('Orders does not exist')
   }
 }
-
 const getUserOrderTotalPriceFromDB = async (userId: string) => {
   try {
-    if (await User.isUserExists(userId.toString())) {
-      // throw new Error('User already exists!')
-    } else {
+    const userExists = await User.isUserExists(userId.toString())
+    if (!userExists) {
       throw new Error('User not found!')
     }
 
@@ -126,19 +130,52 @@ const getUserOrderTotalPriceFromDB = async (userId: string) => {
     if (!existingUser) {
       throw new Error('User not found')
     }
-    const order_result = { orders: existingUser.orders }
+
+    const orders = existingUser.orders || [] // Ensure 'orders' is an array or initialize to an empty array if undefined
+
     let totalPrice = 0
 
-    for (let i = 0; i < order_result.orders.length; i++) {
-      totalPrice +=
-        order_result.orders[i].price * order_result.orders[i].quantity
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i]
+      if (order && order.price !== undefined && order.quantity !== undefined) {
+        totalPrice += order.price * order.quantity
+      } else {
+        throw new Error('Price or quantity is undefined for an order')
+      }
     }
 
     return totalPrice
   } catch (err) {
-    throw new Error(err.message || 'Error getting user order')
+    throw new Error('Error getting user order')
   }
 }
+
+// const getUserOrderTotalPriceFromDB = async (userId: string) => {
+//   try {
+//     if (await User.isUserExists(userId.toString())) {
+//       // throw new Error('User already exists!')
+//     } else {
+//       throw new Error('User not found!')
+//     }
+
+//     const existingUser = await User.findOne({ userId })
+
+//     if (!existingUser) {
+//       throw new Error('User not found')
+//     }
+//     const order_result = { orders: existingUser.orders }
+//     let totalPrice = 0
+
+//     for (let i = 0; i < order_result.orders.length; i++) {
+//       totalPrice +=
+//         order_result.orders[i].price * order_result.orders[i].quantity
+//     }
+
+//     return totalPrice
+//   } catch (err) {
+//     throw new Error('Error getting user order')
+//   }
+// }
 
 export const UserServices = {
   createUserIntoDB,

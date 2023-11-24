@@ -10,10 +10,15 @@ const createUser = async (req: Request, res: Response) => {
 
     const result = await UserServices.createUserIntoDB(zodParsedData)
 
+    if (!result) {
+      throw new Error('error happened')
+    }
+    const { password, ...userWithoutPassword } = result.toObject()
+
     res.status(200).json({
       success: true,
       message: 'User created succesfully!',
-      data: result,
+      data: userWithoutPassword,
     })
   } catch (err: any) {
     res.status(500).json({
@@ -28,7 +33,11 @@ const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB()
 
-    const usersWithoutPassword = result.map(user => {
+    if (!result) {
+      throw new Error('No users found')
+    }
+
+    const usersWithoutPassword = result?.map(user => {
       const { password, ...userWithoutPassword } = user.toObject()
       return userWithoutPassword
     })
@@ -54,7 +63,9 @@ const getSingleUser = async (req: Request, res: Response) => {
     const { userId } = req.params
 
     const result = await UserServices.getSingleUserFromDB(userId)
-
+    if (!result) {
+      throw new Error('error happened')
+    }
     const { password, ...userWithoutPassword } = result.toObject()
 
     res.status(200).json({
@@ -102,6 +113,9 @@ const updateUser = async (req: Request, res: Response) => {
     const userDataToUpdate = req.body
 
     const result = await UserServices.updateUserFromDB(userDataToUpdate, userId)
+    if (!result) {
+      throw new Error('error happened')
+    }
     const { password, ...userWithoutPassword } = result.toObject()
 
     res.status(200).json({
@@ -212,7 +226,7 @@ const getUserOrders = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: err.message || 'Something went wrong while updating orders data',
-      error: err,
+      error: err.message,
     })
   }
 }
