@@ -5,11 +5,10 @@ const app: Application = express()
 
 app.use(express.json())
 app.use(cors())
-// Define a route
+
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, World 3!')
+  res.send('Hello, World !')
 })
-// application routes
 
 app.use('/api/users', UserRoutes)
 
