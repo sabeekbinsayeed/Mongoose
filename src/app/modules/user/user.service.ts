@@ -26,31 +26,22 @@ const deleteUserFromDB = async (userId: string) => {
 }
 
 const updateUserFromDB = async (userData: TUser, userId: string) => {
-  if (await User.isUserExists(userData.userId.toString())) {
-    // throw new Error('User already exists!')
-  } else {
-    throw new Error('data does not exist')
-  }
   const result = await User.updateOne({ userId }, userData)
   return result
 }
 
 // const updateUserOrderFromDB = async (
-//   userData: TUser,
+//   userData: Partial<TUser>,
 //   userId: string,
-//   orders: TOrder,
 // ) => {
-//   if (await User.isUserExists(userData.userId.toString())) {
-//     // throw new Error('User already exists!')
-//   } else {
-//     throw new Error('data does not exist')
+//   const result = await User.findOneAndUpdate({ userId }, userData, {
+//     new: true,
+//   })
+
+//   if (!result) {
+//     throw new Error('User not found')
 //   }
 
-//   if (!User.orders) {
-//     User.orders = []
-//   }
-
-//   const result = await User.updateOne({ userId }, userData)
 //   return result
 // }
 

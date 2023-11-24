@@ -10,6 +10,15 @@ const createUser = async (req: Request, res: Response) => {
     const zodParsedData = userValidationSchema.parse(users)
 
     const result = await UserServices.createUserIntoDB(zodParsedData)
+
+    // const users_object = Object.values(result)
+    // const users_object = result
+
+    // const usersWithoutPassword = users_object.map(user_object => {
+    //   const { password, ...userWithoutPassword } = user_object.toObject()
+    //   return userWithoutPassword
+    // })
+
     res.status(200).json({
       success: true,
       message: 'User created succesfully',
@@ -28,10 +37,15 @@ const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB()
 
+    const usersWithoutPassword = result.map(user => {
+      const { password, ...userWithoutPassword } = user.toObject()
+      return userWithoutPassword
+    })
+
     res.status(200).json({
       success: true,
       message: 'Users fetched succesfully',
-      data: result,
+      data: usersWithoutPassword,
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-an
   } catch (err: any) {
@@ -50,10 +64,12 @@ const getSingleUser = async (req: Request, res: Response) => {
 
     const result = await UserServices.getSingleUserFromDB(userId)
 
+    const { password, ...userWithoutPassword } = result.toObject()
+
     res.status(200).json({
       success: true,
       message: 'User is retrieved succesfully',
-      data: result,
+      data: userWithoutPassword,
     })
   } catch (err: any) {
     res.status(500).json({
@@ -83,30 +99,50 @@ const deleteUser = async (req: Request, res: Response) => {
     })
   }
 }
-
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
+    const userDataToUpdate = req.body
 
-    const { users } = req.body
-
-    const zodParsedData = userValidationSchema.parse(users)
-
-    const result = await UserServices.updateUserFromDB(zodParsedData, userId)
+    const result = await UserServices.updateUserFromDB(userDataToUpdate, userId)
 
     res.status(200).json({
       success: true,
-      message: 'User is updated succesfully',
+      message: 'User updated successfully',
       data: result,
     })
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong while updating data',
+      message: err.message || 'Something went wrong updating the user',
       error: err,
     })
   }
 }
+//eitake comment korlam 10.32 te
+// const updateUser = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params
+
+//     const { users } = req.body
+
+//     // const zodParsedData = userValidationSchema.parse(users)
+
+//     const result = await UserServices.updateUserFromDB(users, userId)
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'User is updated succesfully',
+//       data: result,
+//     })
+//   } catch (err: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message || 'something went wrong while updating data',
+//       error: err,
+//     })
+//   }
+// }
 
 // const updateUserOrder = async (req: Request, res: Response) => {
 //   try {
