@@ -134,57 +134,6 @@ const updateUser = async (req: Request, res: Response) => {
     })
   }
 }
-//eitake comment korlam 10.32 te
-// const updateUser = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params
-
-//     const { users } = req.body
-
-//     // const zodParsedData = userValidationSchema.parse(users)
-
-//     const result = await UserServices.updateUserFromDB(users, userId)
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'User is updated succesfully',
-//       data: result,
-//     })
-//   } catch (err: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: err.message || 'something went wrong while updating data',
-//       error: err,
-//     })
-//   }
-// }
-
-// const updateUserOrder = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params
-
-//     const { order } = req.body
-//     const UserData = await UserServices.getSingleUserFromDB(userId)
-//     // const result = await UserServices.getSingleUserFromDB(userId)
-//     const result = await UserServices.updateUserOrderFromDB(
-//       UserData,
-//       userId,
-//       order,
-//     )
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'User is updated succesfully',
-//       data: result,
-//     })
-//   } catch (err: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: err.message || 'something went wrong while updating data',
-//       error: err,
-//     })
-//   }
-// }
 
 const updateUserOrders = async (req: Request, res: Response) => {
   try {
@@ -257,5 +206,4 @@ export const UserControllers = {
   updateUserOrders,
   getUserOrders,
   getUserOrdersTotalPrice,
-  // updateUserOrder,
 }

@@ -1,7 +1,7 @@
 import { User } from '../user.module'
 
 import { TOrder, TUser } from './user.interface'
-//ts-node-dev --respawn --transpile-only src/server.ts
+
 const createUserIntoDB = async (userData: TUser) => {
   if (await User.isUserExists(userData.userId.toString())) {
     throw new Error('User already exists!')
@@ -50,21 +50,6 @@ const updateUserFromDB = async (userData: TUser, userId: string) => {
   const data = await User.findOne({ userId })
   return data
 }
-
-// const updateUserOrderFromDB = async (
-//   userData: Partial<TUser>,
-//   userId: string,
-// ) => {
-//   const result = await User.findOneAndUpdate({ userId }, userData, {
-//     new: true,
-//   })
-
-//   if (!result) {
-//     throw new Error('User not found')
-//   }
-
-//   return result
-// }
 
 const updateUserOrderFromDB = async (userId: string, orderData: TOrder) => {
   try {
@@ -150,33 +135,6 @@ const getUserOrderTotalPriceFromDB = async (userId: string) => {
   }
 }
 
-// const getUserOrderTotalPriceFromDB = async (userId: string) => {
-//   try {
-//     if (await User.isUserExists(userId.toString())) {
-//       // throw new Error('User already exists!')
-//     } else {
-//       throw new Error('User not found!')
-//     }
-
-//     const existingUser = await User.findOne({ userId })
-
-//     if (!existingUser) {
-//       throw new Error('User not found')
-//     }
-//     const order_result = { orders: existingUser.orders }
-//     let totalPrice = 0
-
-//     for (let i = 0; i < order_result.orders.length; i++) {
-//       totalPrice +=
-//         order_result.orders[i].price * order_result.orders[i].quantity
-//     }
-
-//     return totalPrice
-//   } catch (err) {
-//     throw new Error('Error getting user order')
-//   }
-// }
-
 export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
@@ -186,5 +144,5 @@ export const UserServices = {
   updateUserOrderFromDB,
   getUserOrderFromDB,
   getUserOrderTotalPriceFromDB,
-  // updateUserOrderFromDB,
 }
+//ts-node-dev --respawn --transpile-only src/server.ts
