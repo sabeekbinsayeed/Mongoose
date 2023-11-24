@@ -188,7 +188,7 @@ const updateUserOrders = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
-      data: result,
+      data: null,
     })
   } catch (err: any) {
     res.status(500).json({
@@ -205,7 +205,7 @@ const getUserOrders = async (req: Request, res: Response) => {
     const result = await UserServices.getUserOrderFromDB(userId)
     res.status(200).json({
       success: true,
-      message: 'Order get successfully!',
+      message: 'Order fetched successfully!',
       data: result,
     })
   } catch (err: any) {

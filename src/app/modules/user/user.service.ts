@@ -34,7 +34,8 @@ const deleteUserFromDB = async (userId: string) => {
   }
 
   const result = await User.updateOne({ userId }, { isDeleted: true })
-  return result
+  const data = await User.findOne({ userId })
+  return data
 }
 
 const updateUserFromDB = async (userData: TUser, userId: string) => {
@@ -66,6 +67,12 @@ const updateUserFromDB = async (userData: TUser, userId: string) => {
 
 const updateUserOrderFromDB = async (userId: string, orderData: TOrder) => {
   try {
+    if (await User.isUserExists(userId.toString())) {
+      // throw new Error('User already exists!')
+    } else {
+      throw new Error('User not found!')
+    }
+
     const existingUser = await User.findOne({ userId })
 
     if (!existingUser) {
@@ -87,6 +94,12 @@ const updateUserOrderFromDB = async (userId: string, orderData: TOrder) => {
 
 const getUserOrderFromDB = async (userId: string) => {
   try {
+    if (await User.isUserExists(userId.toString())) {
+      // throw new Error('User already exists!')
+    } else {
+      throw new Error('User not found!')
+    }
+
     const existingUser = await User.findOne({ userId })
 
     if (!existingUser) {
@@ -102,6 +115,12 @@ const getUserOrderFromDB = async (userId: string) => {
 
 const getUserOrderTotalPriceFromDB = async (userId: string) => {
   try {
+    if (await User.isUserExists(userId.toString())) {
+      // throw new Error('User already exists!')
+    } else {
+      throw new Error('User not found!')
+    }
+
     const existingUser = await User.findOne({ userId })
 
     if (!existingUser) {
