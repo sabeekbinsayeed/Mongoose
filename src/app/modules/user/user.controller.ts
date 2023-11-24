@@ -4,24 +4,15 @@ import { UserServices } from './user.service'
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    // const { users } = req.body
     const users = req.body
 
     const zodParsedData = userValidationSchema.parse(users)
 
     const result = await UserServices.createUserIntoDB(zodParsedData)
 
-    // const users_object = Object.values(result)
-    // const users_object = result
-
-    // const usersWithoutPassword = users_object.map(user_object => {
-    //   const { password, ...userWithoutPassword } = user_object.toObject()
-    //   return userWithoutPassword
-    // })
-
     res.status(200).json({
       success: true,
-      message: 'User created succesfully',
+      message: 'User created succesfully!',
       data: result,
     })
   } catch (err: any) {
@@ -44,7 +35,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Users fetched succesfully',
+      message: 'Users fetched successfully!',
       data: usersWithoutPassword,
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-an
@@ -68,14 +59,17 @@ const getSingleUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'User is retrieved succesfully',
+      message: 'User fetched successfully!',
       data: userWithoutPassword,
     })
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'something went wrong',
-      error: err,
+      message: err.message,
+      error: {
+        code: 404,
+        description: err.message,
+      },
     })
   }
 }
@@ -88,7 +82,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'User is deleted succesfully',
+      message: 'User deleted successfully!',
       data: result,
     })
   } catch (err: any) {
@@ -105,17 +99,21 @@ const updateUser = async (req: Request, res: Response) => {
     const userDataToUpdate = req.body
 
     const result = await UserServices.updateUserFromDB(userDataToUpdate, userId)
+    const { password, ...userWithoutPassword } = result.toObject()
 
     res.status(200).json({
       success: true,
-      message: 'User updated successfully',
-      data: result,
+      message: 'User updated successfully!',
+      data: userWithoutPassword,
     })
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Something went wrong updating the user',
-      error: err,
+      message: err.message,
+      error: {
+        code: 404,
+        description: err.message,
+      },
     })
   }
 }

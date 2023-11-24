@@ -16,6 +16,12 @@ const getAllUsersFromDB = async () => {
 }
 
 const getSingleUserFromDB = async (userId: string) => {
+  if (await User.isUserExists(userId.toString())) {
+    // throw new Error('User already exists!')
+  } else {
+    throw new Error('User not found!')
+  }
+
   const result = await User.findOne({ userId })
   return result
 }
@@ -26,8 +32,15 @@ const deleteUserFromDB = async (userId: string) => {
 }
 
 const updateUserFromDB = async (userData: TUser, userId: string) => {
+  if (await User.isUserExists(userId.toString())) {
+    // throw new Error('User already exists!')
+  } else {
+    throw new Error('User not found!')
+  }
+
   const result = await User.updateOne({ userId }, userData)
-  return result
+  const data = await User.findOne({ userId })
+  return data
 }
 
 // const updateUserOrderFromDB = async (
